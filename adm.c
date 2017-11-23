@@ -2,6 +2,31 @@
 #include<stdlib.h>
 #include<math.h>
 
+#ifdef __linux__
+#define SISTEMA 0 // Linux
+#endif
+
+#ifdef _WIN32
+#define SISTEMA 1 // Windows
+#endif
+
+void limpaTela(){
+    if (SISTEMA == 0)
+        system("clear");
+    else
+        system("cls");
+}
+
+
+void pausa(){
+    if (SISTEMA == 0)
+        system("read -p \"Pressione <ENTER> para continuar...\"");
+    //system("sleep 5 | echo Processando...");
+    else
+        system("pause");
+}
+
+
 float valorFuturo(float vp, float i, int t){
  float vf=0;
  float num = 1+i;
@@ -31,6 +56,7 @@ float valorPresenteLiquido(int t,float taxInter,float inIni){
 
     for(i=0;i<t;i++){
       vpl += fluxo[i] / pow((1 + taxInter),i+1);
+      printf("%.2f\n",fluxo[i] / pow((1 + taxInter),i+1));
     }
 
     return vpl;
@@ -42,7 +68,7 @@ float payback(int t,float taxInter,float inIni){
     float soma=0;
     float vpl=0;
     float payback=0;
-    float acumulado=0;
+    float acumulado[t+1];
 
     for(i=0;i<t;i++){
         printf("\nDigite o Fluxo %d: ",i+1);
@@ -50,16 +76,22 @@ float payback(int t,float taxInter,float inIni){
     }
 
     vpl +=inIni;
-    acumulado=inIni;
+    acumulado[0]=inIni;
     for(i=0;i<t;i++){
       vpl += fluxo[i] / pow((1 + taxInter),i+1);
-      acumulado = fluxo[i]-acumulado;
-      if(acumulado>0){
-        payback=((i-1)+((abs(fluxo[i-1] / pow((1 + taxInter),i-1))))/fluxo[i]);
+      acumulado[i+1] = vpl;
+      if(acumulado[i+1]>0){
+        payback=(i)+((abs(acumulado[i]))/(fluxo[i] / pow((1 + taxInter),i+1)));
         return payback;
       }
     }
+
+    payback=(i)+((abs(acumulado[i]))/(fluxo[i] / pow((1 + taxInter),i+1)));
+    return payback;
+
+
 }
+
 
 void menu(){
     printf("\n########################################");
@@ -81,7 +113,7 @@ int main(){
     float vpl;
 
     while(inte!=0){
-    system("cls");
+    limpaTela();
     menu();
     printf("\nDigite uma Opcao: ");
     scanf("%d",&inte);
@@ -98,7 +130,7 @@ int main(){
         vf = valorFuturo(vp,i,t);
 
         printf("\nValor Final %.2f", vf);
-        system("pause");
+        pausa();
       break;
       case 2:
         printf("\nDigite VF: ");
@@ -111,7 +143,7 @@ int main(){
         vp = valorPresente(vf,i,t);
 
         printf("\nValor Presente %.2f", vp);
-        system("pause");
+        pausa();
       break;
       case 3:
         printf("\nDigite Qtd Periodos: ");
@@ -124,7 +156,7 @@ int main(){
         vpl = valorPresenteLiquido(t,taxInter,inIni);
 
         printf("\nValor Presente Liquido: %.2f\n",vpl);
-        system("pause");
+        pausa();
       break;
       case 4:
         printf("\nDigite Qtd Periodos: ");
@@ -135,10 +167,15 @@ int main(){
         scanf("%f",&inIni);
 
         vpl = payback(t,taxInter,inIni);
-
-        printf("\nPayback: %.2f\n",vpl);
-        system("pause");
-
+        if(vpl<t){
+          printf("\nPayback Viavel: %.2f\n",vpl);
+        }else if(vpl=t){
+          printf("\nPayback Indiferente: %.2f\n",vpl);
+        }else{
+          printf("\nPayback Inviavel: %.2f\n",vpl);
+        }
+        pausa();
+      break;
       case 0:
         return 0;
       break;
