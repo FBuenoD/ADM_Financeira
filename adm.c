@@ -17,7 +17,6 @@ void limpaTela(){
         system("cls");
 }
 
-
 void pausa(){
     if (SISTEMA == 0)
         system("read -p \"Pressione <ENTER> para continuar...\"");
@@ -25,7 +24,6 @@ void pausa(){
     else
         system("pause");
 }
-
 
 float valorFuturo(float vp, float i, int t){
  float vf=0;
@@ -88,8 +86,6 @@ float payback(int t,float taxInter,float inIni){
 
     payback=(i)+((abs(acumulado[i]))/(fluxo[i] / pow((1 + taxInter),i+1)));
     return payback;
-
-
 }
 
 
@@ -183,7 +179,6 @@ int main(){
           printf("Opcao Invalida!!");
       break;
       }
-
     }
 
  return 0;
