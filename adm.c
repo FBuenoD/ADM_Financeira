@@ -88,6 +88,41 @@ float payback(int t,float taxInter,float inIni){
     return payback;
 }
 
+float pontoEquilibrio(float custoFixo,float precoUnit,float custoVariUnit){
+    float results;
+
+    results = custoFixo/(precoUnit-custoVariUnit);
+
+    return results;
+}
+
+float taxaInternaRetorno(float investi, int t){
+  float capital, m;
+  int i;
+  float tir =0, aux=0, fluxos;
+
+    investi = investi * (-1);
+
+
+    t = t+1;
+    float fc[t];
+    fc[0] = investi;
+
+    for (i=1;i<t; i++){
+      printf("\nInforme o valor para o periodo %d: ",i);
+      scanf("%f",&fc[i]);
+    }
+
+    do{
+      aux = 0;
+      tir += 0.01;
+      for (i=0;i < t; i ++){
+        aux += (fc[i]/pow(1+(tir/100),i));
+      }
+    }while(aux > 0);
+
+    return tir;
+}
 
 void menu(){
     printf("\n########################################");
@@ -96,6 +131,8 @@ void menu(){
     printf("\n##### 2 - Valor Presente          ######");
     printf("\n##### 3 - Valor Presente Liquido  ######");
     printf("\n##### 4 - Payback                 ######");
+    printf("\n##### 5 - Ponto de Equilibrio     ######");
+    printf("\n##### 6 - Taxa Interna Retorno    ######");
     printf("\n##### 0 - Sair                    ######");
     printf("\n########################################");
 }
@@ -106,7 +143,9 @@ int main(){
     int t;
     int inte;
     float taxInter, inIni;
-    float vpl;
+    float vpl, custoFixo, precoUnit, projeVendas,custoVariUnit, results;
+    float investi;
+
 
     while(inte!=0){
     limpaTela();
@@ -172,6 +211,34 @@ int main(){
         }
         pausa();
       break;
+      case 5:
+        printf("\nDigite o Custo Fixo: ");
+        scanf("%f",&custoFixo);
+        printf("\nDigite o Preco de Venda Unitario: ");
+        scanf("%f",&precoUnit);
+        printf("\nDigite o Tempo de Projecao Venda: ");
+        scanf("%f",&projeVendas);
+        printf("\nDigite o Custo Variavel Unitario: ");
+        scanf("%f",&custoVariUnit);
+        results = pontoEquilibrio(custoFixo,precoUnit,custoVariUnit);
+        printf("\n Ponto de Equilibrio = %.0f", results);
+        if(projeVendas>results){
+            printf("\nVoce esta acima do Ponto de Equilibrio");
+        }else if(projeVendas<results){
+            printf("\nVoce esta abaixo do Ponto de Equilibrio");
+        }
+        pausa();
+        break;
+      case 6:
+        printf("\nInforme o valor investimento inicial: ");
+        scanf("%f",&investi);
+        printf("\nInforme o total de periodos: ");
+        scanf("%d",&t);
+        results = taxaInternaRetorno(investi,t);
+        printf("\n%f",results);
+        pausa();
+        break;
+
       case 0:
         return 0;
       break;
