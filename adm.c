@@ -114,11 +114,11 @@ float taxaInternaRetorno(float investi, int t){
     }
 
     do{
-      aux = 0;
-      tir += 0.01;
-      for (i=0;i < t; i ++){
-        aux += (fc[i]/pow(1+(tir/100),i));
-      }
+       aux = 0;
+       tir += 0.01;
+       for(i=0; i<(t+1); i++){
+         aux += (fc[i]/(pow((1+(tir/100)),i)));
+       }
     }while(aux > 0);
 
     return tir;
