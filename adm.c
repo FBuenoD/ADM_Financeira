@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
+#include<ctype.h>
+
 
 #ifdef __linux__
 #define SISTEMA 0 // Linux
@@ -96,32 +98,36 @@ float pontoEquilibrio(float custoFixo,float precoUnit,float custoVariUnit){
     return results;
 }
 
-float taxaInternaRetorno(float investi, int t){
-  float capital, m;
-  int i;
-  float tir =0, aux=0, fluxos;
-
-    investi = investi * (-1);
+void taxaInternaRetorno(){
+  int periodo, i;
+      float iv;
+      float txr;
 
 
-    t = t+1;
-    float fc[t];
-    fc[0] = investi;
+      printf("Digite o numero de periodos: ");
+      scanf("%d", &periodo);
+      printf("Digite o valor do investimento inicial: ");
+      scanf("%f", &iv);
 
-    for (i=1;i<t; i++){
-      printf("\nInforme o valor para o periodo %d: ",i);
-      scanf("%f",&fc[i]);
-    }
+      float vf[periodo+1];
+      vf[0] = iv*(-1);
 
-    do{
-       aux = 0;
-       tir += 0.01;
-       for(i=0; i<(t+1); i++){
-         aux += (fc[i]/(pow((1+(tir/100)),i)));
-       }
-    }while(aux > 0);
+      for(i=1;i<periodo+1; i++){
+          printf("Digite O valor de Fluxo %d: ", i);
+          scanf("%f", &vf[i]);
+      }
 
-    return tir;
+      float aux;
+
+      do
+      {
+          aux = 0;
+          txr += 0.01;
+          for(i=0; i<(periodo+1); i++){
+              aux += (vf[i]/(pow((1+(txr/100)),i)));
+          }
+      }while(aux>0);
+      printf("%.2f", txr);
 }
 
 void menu(){
@@ -141,14 +147,15 @@ int main(){
 
     float vp, i,vf=0;
     int t;
-    int inte;
+    int inte=1;
     float taxInter, inIni;
-    float vpl, custoFixo, precoUnit, projeVendas,custoVariUnit, results;
+    float vpl, custoFixo, precoUnit, projeVendas, custoVariUnit, results;
     float investi;
+
+    limpaTela();
 
 
     while(inte!=0){
-    limpaTela();
     menu();
     printf("\nDigite uma Opcao: ");
     scanf("%d",&inte);
@@ -166,6 +173,7 @@ int main(){
 
         printf("\nValor Final %.2f", vf);
         pausa();
+        limpaTela();
       break;
       case 2:
         printf("\nDigite VF: ");
@@ -178,7 +186,10 @@ int main(){
         vp = valorPresente(vf,i,t);
 
         printf("\nValor Presente %.2f", vp);
+
         pausa();
+        limpaTela();
+
       break;
       case 3:
         printf("\nDigite Qtd Periodos: ");
@@ -187,11 +198,12 @@ int main(){
         scanf("%f",&taxInter);
         printf("\nDigite Investimento Inicial: ");
         scanf("%f",&inIni);
-
         vpl = valorPresenteLiquido(t,taxInter,inIni);
-
         printf("\nValor Presente Liquido: %.2f\n",vpl);
+
         pausa();
+        limpaTela();
+
       break;
       case 4:
         printf("\nDigite Qtd Periodos: ");
@@ -210,6 +222,8 @@ int main(){
           printf("\nPayback Inviavel: %.2f\n",vpl);
         }
         pausa();
+        limpaTela();
+
       break;
       case 5:
         printf("\nDigite o Custo Fixo: ");
@@ -228,15 +242,13 @@ int main(){
             printf("\nVoce esta abaixo do Ponto de Equilibrio");
         }
         pausa();
+        limpaTela();
+
         break;
       case 6:
-        printf("\nInforme o valor investimento inicial: ");
-        scanf("%f",&investi);
-        printf("\nInforme o total de periodos: ");
-        scanf("%d",&t);
-        results = taxaInternaRetorno(investi,t);
-        printf("\n%f",results);
+        taxaInternaRetorno();
         pausa();
+        limpaTela();
         break;
 
       case 0:
