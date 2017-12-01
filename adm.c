@@ -3,7 +3,6 @@
 #include<math.h>
 #include<ctype.h>
 
-
 #ifdef __linux__
 #define SISTEMA 0 // Linux
 #endif
@@ -102,7 +101,6 @@ void taxaInternaRetorno(){
   int periodo, i;
       float iv;
       float txr;
-
 
       printf("Digite o numero de periodos: ");
       scanf("%d", &periodo);
